@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Product Table</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+        letter-spacing: 1px;
+      }
+      h1 {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+      }
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+      img {
+        max-width: 100px;
+        max-height: 100px;
+      }
+      .search-container {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+      #searchInput {
+        width: 50%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 50px;
+      }
+      .create-button {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        cursor: pointer;
+      }
+      .cards {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+      /* .card-body .card-title{
+        background-color: red;
+      } */
+    </style>
+  </head>
+  <body>
+    <u><h1>Admin Dashboard</h1></u>
+    <div class="cards">
+      <div class="card bg-white mb-3" style="max-width: 18rem">
+        <div 
+          class="card-body d-flex justify-content-center align-items-center"
+          style="height: 8rem"
+        >
+          <h5 class="card-title" >
+            Total Products:<span id="totalProducts" class="ms-2" ;>3</span>
+          </h5>
+        </div>
+      </div>
+
+      <div class="card bg-white mb-3" style="max-width: 18rem">
+        <div
+          class="card-body d-flex justify-content-center align-items-center"
+          style="height: 8rem"
+        >
+          <h5 class="card-title">
+            User count:<span id="userCount" class="ms-2">0</span>
+          </h5>
+        </div>
+      </div>
+    </div>
+    <div class="search-container">
+      <input type="text" id="searchInput" placeholder="Search..." />
+      <button
+        class="btn btn-primary"
+        data-bs-toggle="modal"
+        data-bs-target="#exampleModal"
+      >
+        Add Product
+      </button>
+      <button class="btn btn-primary" onclick="logout()">Logout</button>
+    </div>
+    <table id="productTable" class="table">
+      <thead>
+        <tr>
+          <th>Product Name</th>
+          <th>Product Image</th>
+          <th>Price</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Redmi Note 11 Pro</td>
+          <td>
+            <img
+              src="https://www.notebookcheck.net/fileadmin/Notebooks/News/_nc3/redmi_note_11_pro_5g_1.PNG"
+              alt="Product 1"
+            />
+          </td>
+          <td>₹17,999</td>
+          <td>
+            <button class="btn btn-sm btn-warning" onclick="editProduct(this)">
+              Edit
+            </button>
+            <button class="btn btn-sm btn-danger" onclick="deleteProduct(this)">
+              Delete
+            </button>
+          </td>
+        </tr>
+        <tr>
+          <td>Apple iPhone 15</td>
+          <td>
+            <img
+              src="https://i.gadgets360cdn.com/large/iphone_15_pro_apple_main_1694545066686.jpg"
+              alt="Product 2"
+            />
+          </td>
+          <td>₹68,900</td>
+          <td>
+            <button class="btn btn-sm btn-warning" onclick="editProduct(this)">
+              Edit
+            </button>
+            <button class="btn btn-sm btn-danger" onclick="deleteProduct(this)">
+              Delete
+            </button>
+          </td>
+        </tr>
+        <tr>
+          <td>Apple MacBook Air</td>
+          <td>
+            <img
+              src="https://images.fonearena.com/blog/wp-content/uploads/2023/06/Apple-MacBook-Air-15-1024x651.jpg"
+              alt="Product 3"
+            />
+          </td>
+          <td>₹1,34,900</td>
+          <td>
+            <button class="btn btn-sm btn-warning" onclick="editProduct(this)">
+              Edit
+            </button>
+            <button class="btn btn-sm btn-danger" onclick="deleteProduct(this)">
+              Delete
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div
+      class="modal fade"
+      id="exampleModal"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Create Product</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="productForm">
+              <div class="mb-3">
+                <label for="productName" class="form-label">Product Name</label>
+                <input type="text" class="form-control" id="productName" />
+              </div>
+              <div class="mb-3">
+                <label for="productImage" class="form-label"
+                  >Product Image</label
+                >
+                <input type="file" class="form-control" id="productImage" />
+              </div>
+              <div class="mb-3">
+                <label for="productPrice" class="form-label">Price</label>
+                <input type="text" class="form-control" id="productPrice" />
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              onclick="saveProduct()"
+            >
+              Save Product
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal fade"
+      id="editModal"
+      tabindex="-1"
+      aria-labelledby="editModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="editModalLabel">Edit Product</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="editProductForm">
+              <div class="mb-3">
+                <label for="editProductName" class="form-label"
+                  >Product Name</label
+                >
+                <input type="text" class="form-control" id="editProductName" />
+              </div>
+              <div class="mb-3">
+                <label for="editProductImage" class="form-label"
+                  >Product Image</label
+                >
+                <input type="file" class="form-control" id="editProductImage" />
+              </div>
+              <div class="mb-3">
+                <label for="editProductPrice" class="form-label">Price</label>
+                <input type="text" class="form-control" id="editProductPrice" />
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              onclick="updateProduct()"
+            >
+              Update Product
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+   
+
+
+
+      function searchFunction() {
+
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("searchInput");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("productTable");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+          td = tr[i].getElementsByTagName("td")[0];
+          if (td) {
+            txtValue = td.textContent || td.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+              tr[i].style.display = "";
+            } else {
+              tr[i].style.display = "none";
+            }
+          }
+        }
+      }
+
+      function saveProduct() {
+        var productName = document.getElementById("productName").value;
+        var productImage = document.getElementById("productImage").files[0];
+        var productPrice = document.getElementById("productPrice").value;
+
+        var reader = new FileReader();
+        reader.onload = function (e) {
+          var table = document
+            .getElementById("productTable")
+            .getElementsByTagName("tbody")[0];
+          var newRow = table.insertRow();
+          newRow.innerHTML =
+            "<td>" +
+            productName +
+            '</td><td><img src="' +
+            e.target.result +
+            '" alt="' +
+            productName +
+            '"></td><td>' +
+            productPrice +
+            '</td><td><button class="btn btn-sm btn-warning" onclick="editProduct(this)">Edit</button> <button class="btn btn-sm btn-danger" onclick="deleteProduct(this)">Delete</button></td>';
+
+          document.getElementById("totalProducts").textContent =
+            table.rows.length;
+        };
+        reader.readAsDataURL(productImage);
+
+        var modal = bootstrap.Modal.getInstance(
+          document.getElementById("exampleModal")
+        );
+        modal.hide();
+      }
+
+      function editProduct(button) {
+        var row = button.parentNode.parentNode;
+        var cells = row.getElementsByTagName("td");
+
+        document.getElementById("editProductName").value = cells[0].innerText;
+        document.getElementById("editProductPrice").value = cells[2].innerText;
+
+        document.getElementById("editProductForm").dataset.rowIndex =
+          row.rowIndex;
+
+        var modal = new bootstrap.Modal(document.getElementById("editModal"));
+        modal.show();
+      }
+
+      function updateProduct() {
+        var form = document.getElementById("editProductForm");
+        var rowIndex = form.dataset.rowIndex;
+        var table = document
+          .getElementById("productTable")
+          .getElementsByTagName("tbody")[0];
+        var row = table.rows[rowIndex - 1];
+
+        var productName = document.getElementById("editProductName").value;
+        var productImage = document.getElementById("editProductImage").files[0];
+        var productPrice = document.getElementById("editProductPrice").value;
+
+        if (productImage) {
+          var reader = new FileReader();
+          reader.onload = function (e) {
+            row.cells[0].innerText = productName;
+            row.cells[1].getElementsByTagName("img")[0].src = e.target.result;
+            row.cells[2].innerText = productPrice;
+          };
+          reader.readAsDataURL(productImage);
+        } else {
+          row.cells[0].innerText = productName;
+          row.cells[2].innerText = productPrice;
+        }
+
+        var modal = bootstrap.Modal.getInstance(
+          document.getElementById("editModal")
+        );
+        modal.hide();
+      }
+
+      function deleteProduct(button) {
+        var row = button.parentNode.parentNode;
+        row.parentNode.removeChild(row);
+
+        var table = document
+          .getElementById("productTable")
+          .getElementsByTagName("tbody")[0];
+        document.getElementById("totalProducts").textContent =
+          table.rows.length;
+      }
+
+      document
+        .getElementById("searchInput")
+        .addEventListener("input", searchFunction);
+
+      function logout() {
+        window.location.href = "index.html";
+      }
+    </script>
+  </body>
+</html>
